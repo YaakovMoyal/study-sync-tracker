@@ -3,6 +3,7 @@ import cors from 'cors';
 import { config } from './config/env';
 import { initSchema } from './models/db';
 import healthRouter from './routes/health';
+import statusRouter from './routes/status';
 import { notFound, errorHandler } from './middleware/errorHandler';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use('/health', healthRouter);
+app.use('/status', statusRouter);
 
 // Fallbacks (must be registered after the routes)
 app.use(notFound);

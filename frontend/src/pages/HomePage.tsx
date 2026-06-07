@@ -5,6 +5,7 @@ import {
   type HealthResponse,
   type AppStatusResponse,
 } from '../api/client';
+import { useClickCounter } from '../hooks/useClickCounter';
 
 // Turns the backend's ISO timestamp into something human-readable.
 function formatTime(iso: string): string {
@@ -30,7 +31,11 @@ export default function HomePage() {
   const [statusError, setStatusError] = useState<string | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
 
+  // Closure-based hook: counts how many times the health button was clicked.
+  const { count: healthClicks, increment: countHealthClick } = useClickCounter();
+
   async function checkHealth() {
+    countHealthClick(); // bump the click counter on every press
     setHealthLoading(true);
     setHealthError(null);
     try {
@@ -67,6 +72,9 @@ export default function HomePage() {
       <button onClick={checkHealth} disabled={healthLoading}>
         {healthLoading ? 'Checking…' : 'Check backend connection'}
       </button>
+      <span style={{ marginInlineStart: '0.5rem', color: '#666' }}>
+        Clicks: {healthClicks}
+      </span>
 
       {health && (
         <dl style={{ background: '#f5f5f5', padding: '0.75rem', borderRadius: 6 }}>
